@@ -1,34 +1,78 @@
 #include "linkedlist.h"
-
-LinkedList::LinkedList(){
+template<typename U>
+LinkedList<U>::LinkedList(){
 	this->size=0;
 	this->head=NULL;
+	this->tail=NULL;
 }
 
-LinkedList::~LinkedList(){
-	delete head;
+template<typename U>
+LinkedList<U>::~LinkedList(){
+	while(head!=NULL){
+		Node<U> *del=head;
+		head=head->next;
+		delete del;
+		size--;
+	}
 }
 
-void LinkedList::print(){
-	Node *print =head; //creamos un puntero nodo para recorrer la lista
-	while(print !=0){
+template<typename U>
+LinkedList<U>::LinkedList(const LinkedList<U> &o){
+	this->size= o->size;
+	this->head= o->head;
+	this->tail= o->tail;
+}
+
+template<typename U>
+void LinkedList<U>::push_front(const U p){
+	Node<U> *newOne= new Node<U>(p);
+	if (head==NULL)
+		head = newOne;
+	else {
+		newOne->next=head;
+		head=newOne;
+	}
+	size++;
+}
+
+
+template<typename U>
+void LinkedList<U>::push_back(const U p){
+	Node<U> *newOne= new Node<U>(p);
+	Node<U> *aux=head;
+	if(head==NULL)
+		head = newOne;
+	else{
+		while(aux!=NULL){
+			tail=aux;
+			aux=aux->next;
+		}
+		tail->next=newOne; //agrega en la cola de la lista
+	}
+}
+
+template<typename U>
+void LinkedList<U>::print(){
+	Node<U> *print =head; //creamos un puntero nodo para recorrer la lista
+	while(print !=NULL){
 		std::cout<<print->element<<"\t";
 		print=print->next;
 	}
 	std::cout<<"\n";
 }
 
-void LinkedList::insert(const int a){//ordenarlo
-	Node* newNode = new Node (a);
+template <typename U>
+void LinkedList<U>::insert(const U a){//ordenarlo
+	Node<U> *newNode = new Node<U>(a);
 	//cuando la lista esta vacia
-	if (head==0){
+	if (head==NULL){
 		head = newNode;
 	}
 	else{
-		Node* control = head;
-		Node* aux = 0;
+		Node<U>*control = head;
+		Node<U>*aux = NULL;
 		//recorre hasta encontrar el lugar indicado
-		while(control !=0){
+		while(control !=NULL){
 			if(control->element>=newNode->element)
 				break;
 			else{
@@ -42,7 +86,7 @@ void LinkedList::insert(const int a){//ordenarlo
 			head=newNode;
 		}
 		else{
-		//inserta despues de la cabeza
+		//inserta despues de la cabezera
 			newNode->next=control;
 			aux->next=newNode;
 		}
@@ -50,16 +94,17 @@ void LinkedList::insert(const int a){//ordenarlo
 	size++;
 }
 		
-void LinkedList::remove(const int n){
+template<typename U>
+void LinkedList<U>::remove(const U n){
 	//lista vacia
-	if(head==0){
+	if(head==NULL){
 		std::cout<<"Node cannot be deleted from an empty list\n";
 	}
 	else{
-		Node *control=head;
-		Node *aux=0;
+		Node<U> *control=head;
+		Node<U> *aux=NULL;
 		//recorre hasta encontrar el nodo para eliminarlo
-		while(control!=0){
+		while(control!=NULL){
 			if(control->element==n)
 				break;
 			else{
@@ -68,11 +113,11 @@ void LinkedList::remove(const int n){
 			}
 		}
 		//numero ingrersado no se encuentra en la lista
-		if(control==0){
-			std::cout<<"the number: "<<n<<" is not found\n";
+		if(control==NULL){
+			std::cout<<"the value: "<<n<<" is not found\n";
 		}
 		else{
-			//eliminar en la cabeza
+			//eliminar en la cabezera
 			if(head==control)
 				head=head->next;
 			//elimina desde la cola de la lista
@@ -84,4 +129,3 @@ void LinkedList::remove(const int n){
 	}
 			
 }
-		
